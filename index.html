@@ -1,26 +1,63 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<!-- saved from url=(0024)http://anhnct.github.io/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	 
+  </head>
 <body>
+<div>
+	<p>Video gốc:</p>
+	<video id="video1" controls="" width="600" height="250" autoplay="">
+	  <source src="video.mp4" type="video/mp4">
+	</video>
+</div>
 
-<p>Video to use:</p>
-<video id="video1" controls width="270" autoplay>
-  <source src="video/video.mp4" type='video/mp4'>
-  <source src="video/video.ogg" type='video/ogg'>
-  <source src="video/video.webm" type='video/webm'>
-</video>
+<div>
+	<p>Canvas Gaussian:</p>
+	<canvas id="myCanvas2" width="600" height="250" style="border:1px solid #d3d3d3;">
+	Trình duyệt của bạn không hỗ trợ thẻ Canvas HTML5.</canvas>
+	<input type="range" min="0" max="50" value="10" id="slider">
+</div>
 
-<p>Canvas:</p>
-<canvas id="myCanvas" width="270" height="190" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
-
+<script src="stackblur.js"></script>
 <script>
-
+ 
+//
 var v = document.getElementById("video1");
-var c = document.getElementById("myCanvas");
+var c = document.getElementById("myCanvas2");
 var ctx = c.getContext("2d");
 var i;
+//
+var canvas = document.getElementById('myCanvas2');
+var context = canvas.getContext('2d');
+var back = document.createElement('canvas');
+var backcontext = back.getContext('2d');
+var slider = document.getElementById("slider");
+var cw, ch;
 
-v.addEventListener("play", function() {i = window.setInterval(function() {ctx.drawImage(v,0,0,270,190)},20);}, false);
+v.addEventListener("play", function() {i = window.setInterval(function() 
+{
+ //Canvas 1
+ ctx.drawImage(v,0,0,600,250);
+ ctx.crossOrigin = 'anonymous'; 
+ var idata = ctx.getImageData(0,0,600,250);
+ console.log(ctx.getImageData(0,0,600,250));
+ var data = idata.data;
+ idata.data = data;
+ ctx.putImageData(idata,0,0);
+ //Canvas 2
+
+cw = v.clientWidth;
+ch = v.clientHeight;
+canvas.width = cw;
+canvas.height = ch;
+back.width = cw;
+back.height = ch;
+backcontext.drawImage(v, 0, 0, cw, ch);
+context.putImageData(idata, 0, 0);
+StackBlur.canvasRGB(canvas, 0, 0, canvas.width, canvas.height, slider.value);
+draw(v, context, backcontext, cw, ch);
+},0);}, false);
 v.addEventListener("pause", function() {window.clearInterval(i);}, false);
 v.addEventListener("ended", function() {clearInterval(i);}, false); 
  
@@ -28,5 +65,5 @@ v.addEventListener("ended", function() {clearInterval(i);}, false);
 
 
 
-</body>
-</html>
+
+<div></div></body><div></div></html>
